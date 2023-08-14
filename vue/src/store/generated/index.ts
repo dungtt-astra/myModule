@@ -1,8 +1,10 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import MymoduleMymodule from './mymodule.mymodule'
 
 
 export default { 
+  MymoduleMymodule: load(MymoduleMymodule, 'mymodule.mymodule'),
   
 }
 
