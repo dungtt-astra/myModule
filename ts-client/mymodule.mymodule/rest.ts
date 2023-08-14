@@ -9,6 +9,8 @@
  * ---------------------------------------------------------------
  */
 
+export type MymoduleMsgCommitmentResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

@@ -7,7 +7,22 @@ option go_package = "myModule/x/mymodule/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc Commitment(MsgCommitment) returns (MsgCommitmentResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCommitment {
+  string creator = 1;
+  string from = 2;
+  string coinA = 3;
+  string toATimelock = 4;
+  string blockheight = 5;
+  string toBHashlock = 6;
+  string hashcode = 7;
+  string coinlock = 8;
+}
+
+message MsgCommitmentResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

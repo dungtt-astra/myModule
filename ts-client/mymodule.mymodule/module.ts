@@ -7,10 +7,21 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgCommitment } from "./types/mymodule/tx";
 
 
-export {  };
+export { MsgCommitment };
 
+type sendMsgCommitmentParams = {
+  value: MsgCommitment,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgCommitmentParams = {
+  value: MsgCommitment,
+};
 
 
 export const registry = new Registry(msgTypes);
@@ -30,6 +41,28 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
+		async sendMsgCommitment({ value, fee, memo }: sendMsgCommitmentParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCommitment: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCommitment({ value: MsgCommitment.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCommitment: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgCommitment({ value }: msgCommitmentParams): EncodeObject {
+			try {
+				return { typeUrl: "/mymodule.mymodule.MsgCommitment", value: MsgCommitment.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCommitment: Could not create message: ' + e.message)
+			}
+		},
 		
 	}
 };
